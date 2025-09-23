@@ -1,0 +1,38 @@
+# BlueJ
+*.ctxt
+*.class
+doc
+package.bluej
+
+# Eclipse
+.project
+.settings
+.classpath
+
+# Gradle
+/.gradle/
+/build/
+/captures/
+/local.properties
+
+# IDEA
+/out
+/.idea
+
+# Logs
+*.log
+
+# MacOS
+.DS_Store
+
+# Vi
+*~
+
+# VM crash logs
+hs_err_pid*
+
+# VSCode
+/bin
+
+# Windows
+Thumbs.db

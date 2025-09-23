@@ -1,0 +1,30 @@
+plugins {
+  id "application"
+  id "idea"
+}
+
+java {
+  toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+application {
+  mainClass = "lab.Analyzer"
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation "org.ow2.asm:asm:9.7"
+  implementation "org.ow2.asm:asm-tree:9.7"
+  implementation "org.ow2.asm:asm-util:9.7"
+  testImplementation "junit:junit:4.13.2"
+}
+
+idea {
+  module {
+    downloadJavadoc = true
+    downloadSources = true
+  }
+}
