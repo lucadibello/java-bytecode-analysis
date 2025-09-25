@@ -1,45 +1,99 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/EBZFtET_)
-# Software Performance Lab 2
+# Java Bytecode Analysis Tool
 
-## Mnemonics of method invocation instructions
+A static analysis tool that examines Java bytecode within JAR files and generates comprehensive statistics about instruction usage, method invocations, and control flow patterns.
 
-- `invokedynamic` (186) - Invoke a dynamic method
-- `invokeinterface` (185) - Invoke interface method
-- `invokestatic` (184) - Invoke a class (static) method
-- `invokespecial` (183) - Invoke instance method; special handling for superclass, private, and instance initialization method invocations
-- `invokevirtual` (182) - Invoke instance method; dispatch based on class
+## Overview
 
-## Mnemonics of conditional branch instructions
+This tool uses the ASM framework to parse JAR files and analyze their bytecode content. It provides detailed metrics on classes, methods, and individual JVM instructions, with particular focus on method invocation patterns and conditional branching behavior.
 
-### Branch if int comparison with zero succeeds
+## Technical Stack
 
-- `ifeq` (153)
-- `ifne` (154)
-- `iflt` (155)
-- `ifge` (156)
-- `ifgt` (157)
-- `ifle` (158)
+- **Java 21** with toolchain support
+- **ASM Framework 9.7** for bytecode manipulation and analysis
+- **Gradle** for build automation
+- **JUnit 4.13.2** for testing
 
-### Branch if int comparison succeeds
+## Project Structure
 
-- `if_icmpeq` (159)
-- `if_icmpne` (160)
-- `if_icmplt` (161)
-- `if_icmpge` (162)
-- `if_icmpgt` (163)
-- `if_icmple` (164)
+```
+├── src/main/java/lab/Analyzer.java    # Main analysis engine
+├── src/test/resources/                # Test JAR files and expected outputs
+├── build.gradle                       # Build configuration
+└── run.sh                            # Convenience execution script
+```
 
-### Branch if reference comparison succeeds
+## Usage
 
-- `if_acmpeq` (165)
-- `if_acmpne` (166)
+### Build and Run
 
-### Multi-way branch
+```bash
+# Build the project
+./gradlew build
 
-- `tableswitch` (170)
-- `lookupswitch` (171)
+# Analyze a JAR file
+./gradlew run --args "/path/to/file.jar"
 
-### Branch if reference is null or not null
+# Or use the convenience script
+./run.sh
+```
 
-- `ifnonnull` (199)
-- `ifnull` (198)
+### Output
+
+The tool generates statistics in the following format:
+
+```
+Analyzing example.jar
+    File com/example/Class.class
+        Class com/example/Class
+            Method methodName()V
+
+==== STATISTICS ====
+classes:             45
+methods:             312
+instructions:        2150
+invoke instructions: 485
+branch instructions: 127
+
+OPCODE  MNEMONIC        COUNT
+0       nop             0
+1       aconst_null     15
+...
+```
+
+## Analysis Metrics
+
+The analyzer tracks several categories of bytecode instructions:
+
+### Method Invocations (opcodes 182-186)
+- `invokevirtual`: Instance method dispatch
+- `invokespecial`: Constructor, private, and super method calls
+- `invokestatic`: Static method invocations
+- `invokeinterface`: Interface method calls
+- `invokedynamic`: Dynamic method invocation
+
+### Conditional Branches
+- Zero comparisons: `ifeq`, `ifne`, `iflt`, `ifge`, `ifgt`, `ifle` (153-158)
+- Integer comparisons: `if_icmpeq`, `if_icmpne`, `if_icmplt`, `if_icmpge`, `if_icmpgt`, `if_icmple` (159-164)
+- Reference comparisons: `if_acmpeq`, `if_acmpne` (165-166)
+- Multi-way branches: `tableswitch`, `lookupswitch` (170-171)
+- Null checks: `ifnull`, `ifnonnull` (198-199)
+
+## Implementation Notes
+
+- Uses parallel streams for efficient processing of large JAR files
+- Thread-safe data structures (`AtomicInteger`, `ConcurrentHashMap`) enable concurrent analysis
+- Filters out ASM pseudo-instructions (opcode -1) to count only actual JVM bytecode
+- Processes only methods containing executable code
+
+## Testing
+
+```bash
+./gradlew test
+```
+
+Tests validate analysis results against expected outputs using the included ASM library JAR file.
+
+## References
+
+- [ASM Framework](https://asm.ow2.io/)
+- [JVM Specification](https://docs.oracle.com/javase/specs/jvms/se21/html/)
