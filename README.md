@@ -34,7 +34,7 @@
 - `if_acmpeq` (165)
 - `if_acmpne` (166)
 
-### Branch switch
+### Multi-way branch
 
 - `tableswitch` (170)
 - `lookupswitch` (171)
