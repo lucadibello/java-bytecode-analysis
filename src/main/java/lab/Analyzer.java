@@ -119,7 +119,7 @@ public final class Analyzer {
         // update counter for the current opcode
         Analyzer.opcodeCount.merge(opcode, 1, Integer::sum);
 
-        // count number of method invoke
+        // count number of method invocations
         if (
           opcode >= INVOKE_RANGE[0] && opcode <= INVOKE_RANGE[1]
         ) Analyzer.methodInvocationCount.incrementAndGet();
